@@ -1,5 +1,5 @@
 # [BOJ] 10836. 여왕벌
-# 소요 시간 : 30분
+# 소요 시간 : 40분(시간초과)
 
 size, days = map(int, input().split())
 board = [[1] * size for _ in range(size)]
@@ -19,11 +19,10 @@ for i in range(days):
             y += 1
         else:
             x -= 1
-    for a in range(1, size):
-        for b in range(1, size):
-            plus_board[a][b] = max(plus_board[a][b-1], *plus_board[a-1][b-1:b+1])
     for a in range(size):
         for b in range(size):
+            if a != 0 and b != 0:
+                plus_board[a][b] = max(plus_board[a][b - 1], *plus_board[a - 1][b - 1:b + 1])
             board[a][b] += plus_board[a][b]
 
 for i in range(size):

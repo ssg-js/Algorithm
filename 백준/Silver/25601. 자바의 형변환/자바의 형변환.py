@@ -1,15 +1,16 @@
 # [BOJ] 25601. 자바의 형변환
 # 소요 시간 : 20분
 from collections import deque
+import sys
 
-n = int(input())
+n = int(sys.stdin.readline())
 rel = dict()
 ans = 0
 for i in range(n - 1):
-    child, parent = input().split()
+    child, parent = sys.stdin.readline().split()
     rel[child] = parent # 부모는 무조건 하나
 
-one, two = input().split()
+one, two = sys.stdin.readline().split()
 a = one
 while a and ans == 0:
     a = rel.get(a, '')

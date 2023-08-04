@@ -4,33 +4,20 @@ from collections import deque
 
 n = int(input())
 rel = dict()
+ans = 0
 for i in range(n - 1):
     child, parent = input().split()
-    if parent not in rel:
-        rel[parent] = [child]
-    elif child not in rel[parent]:
-        rel[parent].append(child)
+    rel[child] = parent # 부모는 무조건 하나
 
 one, two = input().split()
-ans = 0
-
-
-def bfs(node, o): # node에서 넓이우선으로 child 탐색
-    queue = deque()
-    queue.extend(rel[node])
-    while queue:
-        now = queue.popleft()
-        if now == o:
-            return True
-        if now in rel:
-            queue.extend(rel[now])
-    return False
-
-
-if one in rel:
-    if bfs(one, two):
+a = one
+while a and ans == 0:
+    a = rel.get(a, '')
+    if a == two:
         ans = 1
-if two in rel:
-    if bfs(two, one):
+b = two
+while b and ans == 0:
+    b = rel.get(b, '')
+    if b == one:
         ans = 1
 print(ans)

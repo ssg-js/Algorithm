@@ -11,7 +11,6 @@ sys.setrecursionlimit(10000000)
 
 NUMBER = 9
 board = []
-zero = 0
 # 각 열, 행, 3*3구간에 해당 숫자가 있는지 판별하는 리스트
 col = [[False for _ in range(10)] for _ in range(9)]
 row = [[False for _ in range(10)] for _ in range(9)]
@@ -52,6 +51,4 @@ for i in range(NUMBER):
             col[j][board[i][j]] = True
             row[i][board[i][j]] = True
             box[square(i, j)][board[i][j]] = True
-        else: # 0이면
-            zero += 1
 sudoku(0)

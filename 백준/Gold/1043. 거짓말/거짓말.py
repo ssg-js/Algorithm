@@ -30,9 +30,7 @@ def union(arr):
 for _ in range(party_num):
     temp = list(map(int, sys.stdin.readline().split()))
     parties.append((temp[1:]))
-    if temp[0] >= 2:
-        for i in range(temp[0]-1):
-            union(temp[i+1:])
+    union(temp[1:])
 # 안전한 파티 확인
 ans = 0
 safe = True

@@ -1,0 +1,1 @@
+print(*list(map(lambda x: x[0] * x[1], [tuple(map(int, input().split()))])))

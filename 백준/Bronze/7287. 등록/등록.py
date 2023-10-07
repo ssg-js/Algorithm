@@ -1,0 +1,1 @@
+print('151', 'likemath1997', sep='\n')

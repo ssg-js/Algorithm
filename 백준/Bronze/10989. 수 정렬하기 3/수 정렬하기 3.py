@@ -1,12 +1,8 @@
 import sys
-ans = dict()
-for i in range(int(sys.stdin.readline())):
-    n = int(sys.stdin.readline())
-    if n in ans:
-        ans[n] += 1
-    else:
-        ans[n] = 1
-ans = sorted(ans.items())
-for v, n in ans:
-    for _ in range(n):
-        print(v)
+ans = [0] * 10001
+for _ in range(int(sys.stdin.readline())):
+    ans[int(sys.stdin.readline())] += 1
+for i in range(10001):
+    for k in range(ans[i]):
+        print(i)
+

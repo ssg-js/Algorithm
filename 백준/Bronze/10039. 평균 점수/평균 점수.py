@@ -1,0 +1,1 @@
+print(sum(map(lambda x: 40 if x < 40 else x, [int(input()) for _ in range(5)])) // 5)

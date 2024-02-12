@@ -1,0 +1,1 @@
+print((lambda x: x[0]*x[1]-x[2] if x[0]*x[1]>x[2] else 0)(list(map(int, input().split()))))

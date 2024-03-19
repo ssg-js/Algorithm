@@ -11,11 +11,9 @@ def cal(command, s):
             tmp = 9999
         return tmp
     elif command == 'L':
-        tmp = '0' * (4-len(str(s))) + str(s)
-        return int(tmp[1:] + tmp[0])
+        return s % 1000 * 10 + s // 1000
     elif command == 'R':
-        tmp = '0' * (4-len(str(s))) + str(s)
-        return int(tmp[3] + tmp[:3])
+        return s // 10 + s % 10 * 1000
 
 
 read = sys.stdin.readline

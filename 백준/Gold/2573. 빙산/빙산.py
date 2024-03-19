@@ -1,54 +1,49 @@
 import sys
-
-n, m = map(int, sys.stdin.readline().split())
-board = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
-di = [-1, 0, 1, 0]
-dj = [0, 1, 0, -1]
-queue = []
-day = 0
-check = False
-
-
-def bfs(a, b):
-    queue.append((a, b))
-    while queue:
-        x, y = queue.pop(0)
-        visited[x][y] = True
-        for d in range(4):
-            ni = x + di[d]
-            nj = y + dj[d]
-            if 0 <= ni < n and 0 <= nj < m:
-                if board[ni][nj] != 0 and not visited[ni][nj]:
-                    visited[ni][nj] = True
-                    queue.append((ni, nj))
-                elif board[ni][nj] == 0:
-                    count[x][y] += 1
-    return 1
-
-
-while True:
+from collections import deque
+read = sys.stdin.readline
+n, m = map(int, read().split())
+board = [list(map(int, read().split())) for _ in range(n)]
+d = [(1, 0), (-1, 0), (0, -1), (0, 1)]
+ans = 0
+flag = False
+year = 0
+all_zero = False
+while not flag and not all_zero:
+    iceberg = [] # 한번에 녹이기
+    group = 1
+    year += 1
+    all_zero = True
     visited = [[False] * m for _ in range(n)]
-    count = [[0] * m for _ in range(n)]
-    result = []
-    for i in range(n):
-        for j in range(m):
-            if board[i][j] != 0 and visited[i][j] == False:
-                result.append(bfs(i, j))
-    # 깍기
-    for i in range(n):
-        for j in range(m):
-            board[i][j] -= count[i][j]
-            if board[i][j] < 0:
-                board[i][j] = 0
-
-    if len(result) == 0:
+    for idx in range(n*m):
+        i, j = idx // m, idx % m
+        if board[i][j] == 0 or visited[i][j]:
+            continue
+        if all_zero:
+            all_zero = False
+        if group == 2:
+            ans = year - 1 # 지금 보드에서 쪼개져 있다는 건 이전 년도에 깨진거
+            flag = True
+            break
+        queue = deque([(i, j)])
+        visited[i][j] = True
+        while queue:
+            x, y = queue.popleft()
+            minus = 0
+            for dx, dy in d:
+                nx, ny = x+dx, y+dy
+                if 0 <= nx < n and 0 <= ny < m:
+                    if board[nx][ny] == 0:
+                        minus += 1
+                    elif not visited[nx][ny]:
+                        visited[nx][ny] = True
+                        queue.append((nx, ny))
+            iceberg.append((x, y, board[x][y]-minus))
+        group += 1
+    if flag:
         break
-    if len(result) >= 2:
-        check = True
-        break
-    day += 1
-    
-if check:
-    print(day)
-else:
-    print(0)
+    # 녹이기
+    for x, y, v in iceberg:
+        if v < 0:
+            v = 0
+        board[x][y] = v
+print(ans)

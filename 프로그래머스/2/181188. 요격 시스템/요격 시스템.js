@@ -7,7 +7,7 @@ function solution(targets) {
     for (var point of targets) {
         if (point[0] >= end) {
             answer += 1;
-            end = point[1];
+            end = point[1]
         }
     }
     return answer

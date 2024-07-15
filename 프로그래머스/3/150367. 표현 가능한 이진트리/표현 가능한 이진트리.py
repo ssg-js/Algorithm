@@ -27,4 +27,4 @@ def solution(numbers):
         else:
             answer.append(0)
         
-    return answer
+    return answer;

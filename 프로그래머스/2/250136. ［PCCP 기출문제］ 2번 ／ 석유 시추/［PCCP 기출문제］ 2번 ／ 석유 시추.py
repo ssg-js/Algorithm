@@ -4,7 +4,7 @@ def solution(land):
     answer = 0
     board = [[[] for _ in range(m)] for _ in range(n)] # (집합값, 총크기)
     visited = [[False] * m for _ in range(n)]
-    d = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    d = [(-1, 0), (1, 0), (0, -1), (0, 1)];
     stack = []
     store = []
     # board 만들기

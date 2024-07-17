@@ -49,3 +49,4 @@ def solution(land):
             cnt += size
         answer = max(answer, cnt)
     return answer
+

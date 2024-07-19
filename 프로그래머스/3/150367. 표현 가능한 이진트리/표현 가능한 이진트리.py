@@ -8,7 +8,7 @@ def half(binary: str):
             return False
     else:
         return True
-            
+        
 
 def solution(numbers):
     answer = []
@@ -27,4 +27,5 @@ def solution(numbers):
         else:
             answer.append(0)
         
-    return answer;
+    return answer
+

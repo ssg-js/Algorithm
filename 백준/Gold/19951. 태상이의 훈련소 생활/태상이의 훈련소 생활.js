@@ -13,8 +13,10 @@ for (let i = 2; i < 2 + m; i++) {
   if (end + 1 < n) { prefixSum[end + 1] += -value; }
 }
 
-process.stdout.write(initBoard[0] + prefixSum[0] + " ");
+initBoard[0] += prefixSum[0];
 for (let i = 1; i < n; i++) {
   prefixSum[i] = prefixSum[i - 1] + prefixSum[i];
-  process.stdout.write(initBoard[i] + prefixSum[i] + " ");
+  initBoard[i] += prefixSum[i];
 }
+
+console.log(initBoard.join(" "));

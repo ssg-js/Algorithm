@@ -10,5 +10,7 @@ function solution(targets) {
             end = point[1]
         }
     }
+    
     return answer
+    
 }

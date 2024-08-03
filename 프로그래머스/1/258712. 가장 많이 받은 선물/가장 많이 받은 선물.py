@@ -30,4 +30,6 @@ def solution(friends, gifts):
     for v in receive_table:
         if v > answer:
             answer = v
+            
+            
     return answer

@@ -4,6 +4,7 @@ const str = input[0];
 const q = Number(input[1]);
 const board = [...Array(26)].map(() => [...Array(str.length)].map(() => 0));
 const norm = 'a'.charCodeAt();
+const ans = [];
 
 for (let i = 0; i < 26; i++) {
   let char = String.fromCharCode(norm + i);
@@ -18,6 +19,8 @@ for (let i = 2; i < 2 + q; i++) {
   let [char, s, e] = input[i].split(" ");
   s = Number(s);
   e = Number(e);
-  if (s === 0) { console.log(board[char.charCodeAt() - norm][e]); }
-  else { console.log(board[char.charCodeAt() - norm][e] - board[char.charCodeAt() - norm][s - 1]); }
+  if (s === 0) { ans.push(board[char.charCodeAt() - norm][e]); }
+  else { ans.push(board[char.charCodeAt() - norm][e] - board[char.charCodeAt() - norm][s - 1]); }
 }
+
+console.log(ans.join('\n'));

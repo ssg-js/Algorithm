@@ -18,7 +18,9 @@ for (let k = 1; k < n + 1; k++) {
   for (let i = 1; i < n + 1; i++) {
     for (let j = 1; j < n + 1; j++) {
       if (i === j || i === k || j === k) { continue; }
-      table[i][j] = Math.min(table[i][j], table[i][k] + table[k][j]);
+      if (table[i][j] > table[i][k] + table[k][j]) {
+        table[i][j] = table[i][k] + table[k][j];
+      }
     }
   }
 }

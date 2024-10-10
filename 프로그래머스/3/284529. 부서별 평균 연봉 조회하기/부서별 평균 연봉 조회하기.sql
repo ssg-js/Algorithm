@@ -4,5 +4,4 @@ from hr_department as a
 join hr_employees as b
 on a.dept_id = b.dept_id
 group by a.dept_id, a.dept_name_en
-order by avg_sal desc
-
+order by avg_sal desc;

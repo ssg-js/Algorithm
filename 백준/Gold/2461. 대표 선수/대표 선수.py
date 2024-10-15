@@ -18,11 +18,11 @@ for c in range(n):
     max_value = max(max_value, students[c][idx[c]])
 
 
-while max(idx) < m:
+while True:
     cur_v, cur_c = heapq.heappop(min_pq)
     ans = min(ans, max_value - cur_v)
-    idx[cur_c] += 1
-    if idx[cur_c] < m:
+    if idx[cur_c] < m-1:
+        idx[cur_c] += 1
         heapq.heappush(min_pq, (students[cur_c][idx[cur_c]], cur_c))
         max_value = max(max_value, students[cur_c][idx[cur_c]])
     else:

@@ -19,8 +19,8 @@ for c in range(n):
 
 
 while max(idx) < m:
-    ans = min(ans, max_value - min_pq[0][0])
     cur_v, cur_c = heapq.heappop(min_pq)
+    ans = min(ans, max_value - cur_v)
     idx[cur_c] += 1
     if idx[cur_c] < m:
         heapq.heappush(min_pq, (students[cur_c][idx[cur_c]], cur_c))

@@ -15,7 +15,6 @@ left join (
 on a.car_id = b.car_id
 join car_rental_company_discount_plan as c
 on a.car_type = c.car_type and c.duration_type = "30일 이상"
-where b.car_id is null and (a.daily_fee * 30 * (100 - c.discount_rate) / 100) >= 500000 and (a.daily_fee * 30 * (100 - c.discount_rate) / 100 < 2000000)
+where b.car_id is null
+having fee >= 500000 and fee < 2000000
 order by fee desc, a.car_type asc, a.car_id desc;
-
-

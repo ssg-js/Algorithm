@@ -1,6 +1,7 @@
 const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "./sample.txt").toString().trim().split("\n");
 
 const t = Number(input[0]);
+let ans = ``;
 for (let i = 1; i < 1 + t; i++) {
   let [s, t] = input[i].split(" ").map(Number);
   const board = [...Array(124)].map(() => []); // 도착지점을 저장해 해당 도착지점이 맞는 case마다 visited 처리
@@ -15,7 +16,7 @@ for (let i = 1; i < 1 + t; i++) {
 
     // A
     if (cur * 2 === target + 3) {
-      console.log(cnt + 1);
+      ans += `${cnt + 1}\n`
       break;
     }
     if (cur * 2 < target + 3) {
@@ -26,7 +27,7 @@ for (let i = 1; i < 1 + t; i++) {
     }
     // B
     if (cur + 1 === target) {
-      console.log(cnt + 1);
+      ans += `${cnt + 1}\n`
       break;
     }
     if (cur + 1 < board.length && !(target in board[cur + 1])) {
@@ -35,3 +36,4 @@ for (let i = 1; i < 1 + t; i++) {
     }
   }
 }
+console.log(ans);

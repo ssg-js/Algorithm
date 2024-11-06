@@ -44,7 +44,7 @@ else:
                     temp = state[:]
                     temp[i] = s[:-1]
                     temp[k] += c
-                    if '0'+str(temp[0])+'1'+str(temp[1])+'2'+str(temp[2]) in visited.keys(): continue
+                    if '0'+str(temp[0])+'1'+str(temp[1])+'2'+str(temp[2]) in visited: continue
 
                     visited['0'+str(temp[0])+'1'+str(temp[1])+'2'+str(temp[2])] = True
                     queue.append(temp)

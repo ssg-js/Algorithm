@@ -5,33 +5,38 @@ n = int(read())
 arr = [list(map(int, read().split())) for _ in range(n)]
 ans = 0
 
-def solve(idx, states, cnt):
+def solve(idx, cnt):
     global ans
-    if ans == len(states):
+    if ans == len(arr):
         return
-    if idx == len(states):
+    if idx == len(arr):
         ans = max(cnt, ans)
         return
 
-    s, w = states[idx]
+    s, w = arr[idx]
     if s <= 0:
-        solve(idx+1, states, cnt)
+        solve(idx+1, cnt)
         return
     
-    for i in range(len(states)):
+    flag = False
+    for i in range(len(arr)):
         if idx == i: continue
 
-        temp = states[:]
-        ns, nw = temp[i]
+        ns, nw = arr[i]
         if ns <= 0:
-            solve(idx+1, temp[:], cnt)
             continue
-        temp[idx] = [s-nw, w]
-        temp[i] = [ns-w, nw]
+        flag = True
+        arr[idx] = [s-nw, w]
+        arr[i] = [ns-w, nw]
         nCnt = cnt
         if s-nw <= 0: nCnt += 1
         if ns-w <= 0: nCnt += 1
-        solve(idx+1, temp, nCnt)
+        solve(idx+1, nCnt)
+        arr[idx] = [s, w]
+        arr[i] = [ns, nw]
+    if not flag:
+        solve(idx+1, cnt)
+    
 
-solve(0, arr, 0)
+solve(0, 0)
 print(ans)

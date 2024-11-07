@@ -5,18 +5,17 @@ n = int(read())
 arr = [list(map(int, read().split())) for _ in range(n)]
 ans = 0
 
-def solve(idx, states):
+def solve(idx, states, cnt):
     global ans
+    if ans == len(states):
+        return
     if idx == len(states):
-        cnt = 0
-        for s, w in states:
-            if s <= 0: cnt += 1
         ans = max(cnt, ans)
         return
 
     s, w = states[idx]
     if s <= 0:
-        solve(idx+1, states)
+        solve(idx+1, states, cnt)
         return
     
     for i in range(len(states)):
@@ -25,11 +24,14 @@ def solve(idx, states):
         temp = states[:]
         ns, nw = temp[i]
         if ns <= 0:
-            solve(idx+1, temp[:])
+            solve(idx+1, temp[:], cnt)
             continue
         temp[idx] = [s-nw, w]
         temp[i] = [ns-w, nw]
-        solve(idx+1, temp)
+        nCnt = cnt
+        if s-nw <= 0: nCnt += 1
+        if ns-w <= 0: nCnt += 1
+        solve(idx+1, temp, nCnt)
 
-solve(0, arr)
+solve(0, arr, 0)
 print(ans)

@@ -1,32 +1,23 @@
-# [BOJ] 1520. 내리막길
-# 소요 시간 : 60분
+import sys
+from heapq import heappop, heappush
+read = sys.stdin.readline
 
-M, N = map(int, input().split())
-board = [list(map(int, input().split())) for _ in range(M)]
-dp = [[-1 for _ in range(N)] for _ in range(M)]
+n, m = map(int, read().split())
+board = [list(map(int, read().split())) for _ in range(n)]
 
-di = [-1, 0, 1, 0]
-dj = [0, 1, 0, -1]
+delta = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+queue = [(-board[0][0], 0, 0)]
+mark = [[0]*m for _ in range(n)]
+mark[0][0] = 1
 
+while queue:
+    cur, x, y = heappop(queue)
+    cur *= -1
 
-# 시작 지점(x, y), 이동 지점(xt, yt)
-def dfs(x, y):
-    # 끝에 도달
-    if x == M - 1 and y == N - 1:
-        return 1
-    # 방문했다면 그 위치의 경우의 수 가져오기
-    if dp[x][y] != -1:
-        return dp[x][y]
-
-    cnt = 0
-    for d in range(4):
-        ni = x + di[d]
-        nj = y + dj[d]
-        if 0 <= ni < M and 0 <= nj < N:
-            if board[ni][nj] < board[x][y]:
-                cnt += dfs(ni, nj)
-    dp[x][y] = cnt
-    return dp[x][y]
-
-
-print(dfs(0, 0))
+    for dx, dy in delta:
+        nx, ny = x+dx, y+dy
+        if 0 <= nx < n and 0 <= ny < m and board[nx][ny] < cur:
+            if mark[nx][ny] == 0:
+                heappush(queue, (-board[nx][ny], nx, ny))
+            mark[nx][ny] += mark[x][y]
+print(mark[-1][-1])

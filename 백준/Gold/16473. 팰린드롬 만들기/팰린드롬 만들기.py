@@ -1,5 +1,5 @@
 import sys
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(5000)
 read = sys.stdin.readline
 
 n = int(read())
@@ -9,15 +9,17 @@ memo = [[-1] * n for _ in range(n)]
 
 
 def bt(preIdx, postIdx):
-    if preIdx < 0 or postIdx == len(arr): return 0
+    if preIdx < 0 or postIdx == len(arr): 
+        return 0
 
-    if memo[preIdx][postIdx] != -1: return memo[preIdx][postIdx]
+    if memo[preIdx][postIdx] != -1: 
+        return memo[preIdx][postIdx]
 
     ret = 0
     if arr[preIdx] == arr[postIdx]:
         ret = 2 + bt(preIdx - 1, postIdx + 1)
-    else: ret = max(bt(preIdx, postIdx + 1), ret)
-    ret = max(bt(preIdx - 1, postIdx), ret)
+    else: 
+        ret = max(bt(preIdx, postIdx + 1), bt(preIdx - 1, postIdx), ret)
 
     memo[preIdx][postIdx] = ret
     return ret

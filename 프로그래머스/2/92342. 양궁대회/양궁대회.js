@@ -1,54 +1,60 @@
 function solution(n, info) {
-    const answer = [];
+    var answer = [];
     
-    find(1, [0], n, info, answer);
+    let maxSub = 0;
+    let state = [...Array(11)].map(()=>0);
+    let spare, apeach, ryan;
+    for (let num = 1; num < (1 << 11); num++) { // 1인 비트는 무조건 어피치보다 많이 맞춰야함
+        spare = n;
+        // 주어진 비트 상태에 맞게 화살 갯수 정하기
+        for (let i = 0; i < 10; i++) { // 1점까지만 구함
+            if (num & (1 << (10-i))) {
+                spare -= info[i] + 1;
+                state[i] = info[i] + 1;
+            } else {
+                state[i] = 0;
+            }
+        }
+        if (spare < 0) { continue; }
+        state[10] = spare;
+        // 어피치랑 점수 비교
+        apeach = 0;
+        ryan = 0;
+        for (let i = 0; i < 10; i++) {
+            if (info[i] > state[i]) {
+                apeach += 10-i;
+            }
+            if (info[i] < state[i]) {
+                ryan += 10-i;
+            }
+        }
+        if (apeach >= ryan) { continue; }
+        
+        // 가장 큰 점수 차이고, 같으면 가장 낮은 점수를 더 많이 맞힌 경우(num이 작은) 경우 선택
+        if (ryan - apeach > maxSub) {
+            answer = [...state];
+            maxSub = ryan - apeach;
+        } else if (ryan - apeach === maxSub) { // 같으면
+            let bool = false;
+            for (let i = 10; i > -1; i--) {
+                if (answer[i] > state[i]) {
+                    break;
+                }
+                if (answer[i] < state[i]) {
+                    bool = true;
+                    break;
+                }
+            }
+            if (bool) {
+                answer = [...state];
+            }
+        }
+        
+    }
     
     if (answer.length === 0) {
         answer.push(-1);
     }
     
     return answer;
-}
-
-function find(curPoint, arr, spareArrow, info, answer) { // 에 차곡차곡 조건을 만족하게 조합 생성
-    if (spareArrow < 0) {
-        return;
-    }
-    
-    if (curPoint === 11) {
-        if (cal(info, arr) > 0) {
-            if (answer.length === 11 && cal(info, arr) <= cal(info, answer)) {
-                return;
-            }
-            arr[10] = spareArrow; // 0점에 남은 화살 몰빵
-            while (answer.length > 0) {
-                answer.pop();
-            }
-            arr.forEach((v)=>answer.push(v));
-        }
-        return;
-    }
-    
-    const curIdx = 10 - curPoint;
-    // 현재 점수 얻기
-    find(curPoint+1, [info[curIdx]+1, ...arr], spareArrow-info[curIdx]-1, info, answer);
-    
-    // 현재 점수 포기
-    find(curPoint+1, [0, ...arr], spareArrow, info, answer);
-    
-    return;
-}
-
-function cal(arr1, arr2) { // arr1, arr2의 점수 차이 반환
-    let aSum = 0;
-    let bSum = 0;
-    for (let i = 0; i < 11; i++) {
-        if (arr1[i] < arr2[i]) {
-            bSum += 10-i;
-        } else if (arr1[i] > arr2[i]) {
-            aSum += 10-i;
-        }
-    }
-    
-    return bSum - aSum;
 }

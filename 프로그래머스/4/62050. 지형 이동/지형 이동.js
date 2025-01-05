@@ -40,37 +40,32 @@ function solution(land, height) {
     }
     store.sort((a, b) => a[0]-b[0]);
     // 최소 비용으로 모든 집합 연결
+    const parents = [...Array(setNum+1)].map((_, i)=>i); // 각 집합의 합쳐진 집합 번호 저장(안 합쳐지면 자기 번호)
     let cnt = 0;
     for (let i = 0; i < store.length; i++) {
         let [v, a, b] = store[i];
         let [aNum, bNum] = [infoBoard[a[0]][a[1]], infoBoard[b[0]][b[1]]];
-        if (aNum === bNum) { continue; } // 같은 집합이면 넘어가기
+        let [aSetNum, bSetNum] = [find(parents, aNum), find(parents, bNum)];
+        
+        if (aSetNum === bSetNum) { continue; } // 같은 집합이면 넘어가기
+        // 다른 집합인 경우
         answer += v;
         cnt += 1;
-        // 둘 비교해서 숫자가 큰 집합애들 작은 집합으로 변환(델타 탐색)
-        if (aNum < bNum) { change(b, aNum, infoBoard); }
-        else if (aNum > bNum) { change(a, bNum, infoBoard); }
+        // 둘 비교해서 숫자가 큰 집합애들 작은 집합으로 변환
+        union(parents, aSetNum, bSetNum);
         // setNum-1 만큼 돌았으면 끝
         if (cnt === setNum-1) { break; }
     }
     return answer;
 }
 
-function change(point, num, arr) {
-    const delta = [[-1, 0], [1, 0], [0, 1], [0, -1]];
-    const n = arr.length;
-    const origin = arr[point[0]][point[1]];
-    const stack = [[...point]];
-    arr[point[0]][point[1]] = num;
-    while (stack.length > 0) {
-        let [x, y] = stack.pop();
-        for (let [dx, dy] of delta) {
-            let [nx, ny] = [x+dx, y+dy];
-            if (0 <= nx && nx < n && 0 <= ny && ny < n && arr[nx][ny] === origin) {
-                arr[nx][ny] = num;
-                stack.push([nx, ny]);
-            }
-        }
-    }
+function union(arr, x, y) {
+    if (x < y) { arr[y] = x; }
+    else if (x > y) { arr[x] = y;}
     return;
+}
+
+function find(arr, x) {
+    if (arr[x] === x) { return x; }
+    return find(arr, arr[x]);
 }

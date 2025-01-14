@@ -35,6 +35,7 @@ else { solve(a, b, c); }
 
 function solve(a, b, c) {
   const queue = new Queue([a, b, c]);
+  const hap = a + b + c;
   if (isSame([a, b, c])) {
     console.log(1);
     return;
@@ -42,6 +43,10 @@ function solve(a, b, c) {
   const visited = [...Array(1500)].map(() => [...Array(1500)].map(() => false));
   visited[a][b] = true;
   visited[b][a] = true;
+  visited[a][c] = true;
+  visited[c][a] = true;
+  visited[b][c] = true;
+  visited[c][b] = true;
 
   while (queue.startNode) {
     let arr = queue.pop();
@@ -57,9 +62,14 @@ function solve(a, b, c) {
         tmp[j] -= tmp[i];
         tmp[i] += tmp[i];
       }
-      if (visited[tmp[i]][tmp[j]] || visited[tmp[j]][tmp[i]]) { continue; }
-      visited[tmp[i]][tmp[j]] = true;
-      visited[tmp[j]][tmp[i]] = true;
+      let [x, y, z] = [tmp[i], tmp[j], hap - tmp[i] - tmp[j]]
+      if (visited[x][y] || visited[x][y] || visited[x][z] || visited[z][x] || visited[y][z] || visited[z][y]) { continue; }
+      visited[x][y] = true;
+      visited[y][x] = true;
+      visited[x][z] = true;
+      visited[z][x] = true;
+      visited[y][z] = true;
+      visited[z][y] = true;
       if (isSame(tmp)) { // 같으면 끝
         console.log(1);
         return;

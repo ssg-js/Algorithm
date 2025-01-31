@@ -1,8 +1,24 @@
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+  connect(node) {
+    this.next = node;
+  }
+  getNextNode() {
+    return this.next;
+  }
+  getValue() {
+    return this.value;
+  }
+}
+
 class Queue {
   constructor(...args) {
-    this.store = {};
-    this.front = 0;
-    this.rear = this.front;
+    this.start = null;
+    this.end = this.start;
+    this.size = 0;
     if (args.length > 0) {
       for (let v of args) {
         this.enqueue(v);
@@ -10,27 +26,29 @@ class Queue {
     }
   }
   enqueue(value) {
-    if (this.rear === this.front) {
-      this.store[this.front] = value;
-      this.rear += 1;
+    let node = new Node(value);
+    if (this.start === null) {
+      this.start = node;
+      this.end = this.start;
+      this.size += 1;
       return;
     }
-    this.store[this.rear] = value;
-    this.rear += 1;
+    this.end.connect(node);
+    this.end = node;
+    this.size += 1;
   }
   dequeue() {
-    if (this.rear === this.front) { return null; }
-    let ret = this.store[this.front];
-    delete this.store[this.front];
-    this.front += 1;
+    let ret = this.start.getValue();
+    this.start = this.start.getNextNode();
+    this.size -= 1;
     return ret;
   }
-  getSize() {
-    return (this.rear - this.front);
-  }
   isEmpty() {
-    if (this.getSize() === 0) { return true; }
+    if (this.size === 0) { return true; }
     return false;
+  }
+  getSize() {
+    return this.size;
   }
 }
 

@@ -6,8 +6,8 @@ const input = require('fs').readFileSync(process.platform === "linux" ? '/dev/st
 const [n, m, x] = input[0].split(" ").map(Number);
 const losers = Array.from(Array(n + 1), () => []); // 낮은 등수애들 체크
 const winners = Array.from(Array(n + 1), () => []); // 높은 등수애들 체크
-const visitedForLosers = Array.from(Array(n + 1), () => -1); // 아래로 몇명인지 체크
-const visitedForWinners = Array.from(Array(n + 1), () => -1); // 위로 몇명인지 체크 
+const visitedForLosers = Array.from(Array(n + 1), () => false); // 아래로 몇명인지 체크
+const visitedForWinners = Array.from(Array(n + 1), () => false); // 위로 몇명인지 체크 
 
 for (let i = 0; i < m; i++) {
   let [a, b] = input[1 + i].split(" ").map(Number);
@@ -15,42 +15,23 @@ for (let i = 0; i < m; i++) {
   winners[b].push(a);
 }
 
-let rank1 = 1 + getWinners(x);
-let rank2 = n - getLosers(x);
-console.log(rank1, rank2)
+let rank1 = get(x, visitedForWinners, winners);
+let rank2 = n - get(x, visitedForLosers, losers) + 1;
+console.log(rank1, rank2);
 
 
-// 그냥 돌리면 1->3->2 의 경우랑 1->2 경우처럼 중복된 경우가 생김 => visited에서 뒤에 몇명있는지를 체크하면 좋을듯
-function getLosers(person) { // losers로 돌림, 뒤에 몇명있는지 반환
-  if (losers[person].length === 0) { return 0; }
-
-  if (visitedForLosers[person] !== -1) { return visitedForLosers[person]; }
-
-  let ret = 0;
-  for (let p of losers[person]) {
-    let result = 1 + getLosers(p);
-    if (result > ret) { ret = result; } // 최대값 저장 => 중간에 사람이 많은게 더 "정확"한 사람 수임
-  }
-  visitedForLosers[person] = ret;
-
-  return ret;
-
-}
-
-function getWinners(person) { // winners로 돌림, 앞에 몇명있는지 반환
-  if (winners[person].length === 0) { return 0; }
-
-  if (visitedForWinners[person] !== -1) { return visitedForWinners[person]; }
+// 앞(winner), 뒤(losers)에서 몇번째인지
+function get(person, visited, arr) {
+  if (visited[person]) { return 0; }
+  visited[person] = true;
 
   let ret = 0;
-  for (let p of winners[person]) {
-    let result = 1 + getWinners(p);
-    if (result > ret) { ret = result; } // 최대값 저장 => 중간에 사람이 많은게 더 "정확"한 사람 수임
+  for (let p of arr[person]) {
+    ret += get(p, visited, arr);
   }
-  visitedForWinners[person] = ret;
 
-  return ret;
+  return 1 + ret;
+
 }
-
 
 

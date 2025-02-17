@@ -11,7 +11,7 @@ const travel = input[2 + n].split(" ").map((v) => Number(v) - 1);
 const parent = [...Array(n)].map((_, i) => i);
 // parent 만들기
 for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
+  for (let j = i + 1; j < n; j++) {
     if (state[i][j] === 1) { union(i, j); }
   }
 }

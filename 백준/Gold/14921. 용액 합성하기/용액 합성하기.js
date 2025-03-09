@@ -12,7 +12,7 @@ while (left < right) {
   let result = arr[left] + arr[right];
   if (Math.abs(result) < Math.abs(answer)) { answer = result; }
   if (result === 0) { break; }
-  else if (result > 0) { right -= 1; }
-  else { left += 1; }
+  else if (result > 0) { right--; }
+  else { left++; }
 }
 console.log(answer);

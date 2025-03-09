@@ -6,7 +6,6 @@ const input = require("fs")
 
 const n = Number(input[0]);
 const arr = input[1].split(" ").map(Number);
-arr.sort((a, b) => a - b);
 let answer = Infinity;
 let [left, right] = [0, n - 1];
 while (left < right) {

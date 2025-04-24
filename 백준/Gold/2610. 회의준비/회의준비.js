@@ -1,58 +1,76 @@
-const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "./sample1.txt").toString().trim().split("\n");
-// https://www.acmicpc.net/problem/2610
+/**
+ * 회의 준비
+ * 서로 알고 있으면 같은 위원회 => 위원회가 여러 개임
+ * 위원회의 수가 최대 => 빠지는 위원회 없음
+ * 의사전달 거리의 최댓값이 최소가 되어야함 => 각 위원회당 최소 거리를 구해야함 => 다익스트라 + 모든 정점
+ * => 플로이드 워셜 => O(n^3) => 10^6
+ * 각 참석자들을 돌면서 같은 위원회에 있는 사람에 대해 의사전달 거리 구하기
+ * => 각 참석자별로 다른 참석자에 대한 거리를 구하므로 O(n^2) => 10 ^ 4
+ * 각 참석자들과 연결된 참석자들 골라서 배열에 넣고 방문처리. 배열에 넣은 애들끼리 의사전달 거리 구하기
+ */
 
-let n = Number(input[0]);
-let m = Number(input[1]);
-const INF = 100000
-let table = [...Array(n + 1)].map(() => [...Array(n + 1)].map(() => INF))
-for (let i = 0; i < table.length; i++) {
-  table[i][i] = 0;
+const input = require("fs")
+  .readFileSync(process.platform === "linux" ? "/dev/stdin" : "../sample.txt")
+  .toString()
+  .trim()
+  .split("\n");
+const n = Number(input[0]);
+const m = Number(input[1]);
+const dist = [...Array(n + 1)].map(() => Array(n + 1).fill(Infinity));
+for (let i = 0; i < m; i++) {
+  let [a, b] = input[2 + i].split(" ").map(Number);
+  dist[a][b] = 1;
+  dist[b][a] = 1;
 }
-for (let i = 2; i < 2 + m; i++) {
-  let [a, b] = input[i].split(" ").map(Number);
-  table[a][b] = 1;
-  table[b][a] = 1;
+
+for (let i = 1; i < n + 1; i++) {
+  dist[i][i] = 0;
 }
 
 for (let k = 1; k < n + 1; k++) {
   for (let i = 1; i < n + 1; i++) {
     for (let j = 1; j < n + 1; j++) {
-      if (i === j || i === k || j === k) { continue; }
-      if (table[i][j] > table[i][k] + table[k][j]) {
-        table[i][j] = table[i][k] + table[k][j];
+      if (dist[i][j] > dist[i][k] + dist[k][j]) {
+        dist[i][j] = dist[i][k] + dist[k][j];
       }
     }
   }
 }
 
-let cnt = 0;
-let repNum = [];
-const visited = [...Array(n + 1)].map(() => false);
+const visited = Array(n + 1).fill(false);
+let committeeNumber = 0;
+let representatives = [];
 for (let i = 1; i < n + 1; i++) {
-  if (visited[i] === true) { continue; }
-  cnt++;
-  const sameGroup = [];
-  for (let k = i; k < n + 1; k++) {
-    if (table[i][k] !== INF) {
-      sameGroup.push(k);
-      visited[k] = true;
+  if (visited[i]) continue;
+  committeeNumber++;
+  const committee = [i];
+  visited[i] = true;
+  // i번째 참석자와 연결된 참석자들
+  for (let j = i + 1; j < n + 1; j++) {
+    if (dist[i][j] < Infinity) {
+      committee.push(j);
+      visited[j] = true;
     }
   }
-
-  let minTime = INF;
-  let minK = INF;
-  for (let k of sameGroup) {
-    let maxTime = 0;
-    for (let nk of sameGroup) {
-      maxTime = Math.max(maxTime, table[k][nk]);
+  // 각 참석자들끼리 의사전달 거리 구하면서 대표자 선정
+  let maxDist = Infinity;
+  let representative = -1;
+  for (const member of committee) {
+    let curDist = 0;
+    for (const otherMember of committee) {
+      if (member === otherMember) continue;
+      if (curDist < dist[member][otherMember]) {
+        curDist = dist[member][otherMember];
+      }
     }
-    if (maxTime < minTime) {
-      minTime = maxTime;
-      minK = k;
+    if (curDist < maxDist) {
+      maxDist = curDist;
+      representative = member;
     }
   }
-  repNum.push(minK);
+  representatives.push(representative);
 }
-
-repNum.sort((a, b) => a - b);
-console.log([cnt, ...repNum].join('\n'))
+representatives.sort((a, b) => a - b);
+let ans = `${committeeNumber}\n`;
+ans += representatives.join("\n");
+console.log(ans);

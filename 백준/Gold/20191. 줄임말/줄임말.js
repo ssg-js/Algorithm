@@ -32,18 +32,29 @@ for (let c of s) {
     break;
   }
 
-  let failed = true;
-  for (let idx of poses[c]) {
-    if (idx > checkingIdx) {
-      checkingIdx = idx;
-      failed = false;
-      break;
-    }
-  }
-  if (failed) {
+  let resultPosIdx = upper_bound(poses[c], checkingIdx);
+  if (resultPosIdx === poses[c].length) {
     answer++;
     checkingIdx = poses[c][0];
+  } else {
+    checkingIdx = poses[c][resultPosIdx];
   }
 }
 
 console.log(answer);
+
+function upper_bound(arr, v) {
+  let [l, r] = [-1, arr.length];
+
+  while (l + 1 < r) {
+    let mid = Math.floor((l + r) / 2);
+
+    if (arr[mid] > v) {
+      r = mid;
+    } else {
+      l = mid;
+    }
+  }
+
+  return r;
+}

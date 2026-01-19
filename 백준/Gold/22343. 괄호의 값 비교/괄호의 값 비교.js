@@ -6,53 +6,55 @@ const input = require("fs")
 
 const tc = Number(input[0]);
 let answer = [];
+const arr1 = new Uint32Array(1500001);
+const arr2 = new Uint32Array(1500001);
+
 for (let t = 0; t < tc; t++) {
   let a = input[1 + 2 * t];
   let b = input[1 + 2 * t + 1];
 
-  let aResult = getValue(a);
-  let bResult = getValue(b);
+  getArray(a, arr1);
+  getArray(b, arr2);
 
-  if (aResult < bResult) answer.push("<");
-  else if (aResult > bResult) answer.push(">");
-  else answer.push("=");
+  answer.push(compare(arr1, arr2));
 }
 console.log(answer.join("\n"));
 
-function getValue(str) {
+function getArray(str, counter) {
+  counter.fill(0);
+
   const open = "(";
   const close = ")";
-
-  let ret = 0;
-  let stack = [];
-  for (let s of str) {
-    if (stack.length === 0 || s === open) {
-      stack.push(s);
-      continue;
+  let depth = 0; // ret index
+  let maxDepth = 0;
+  for (let i = 0; i < str.length; i++) {
+    s = str[i];
+    if (s === open) {
+      depth++;
+      if (depth > maxDepth) maxDepth = depth;
     } else if (s === close) {
-      let sum = 0;
-      // 닫는 괄호에 대응하는 여는 괄호 찾기, 그전까지는 더할 수들만 있으므로 더하기
-      let top = stack.pop();
-      while (top !== open) {
-        sum += Number(top);
-        top = stack.pop();
+      depth--;
+      if (str[i - 1] === open) {
+        counter[depth]++;
       }
-      // 닫을 때, 안에 값이 있다면 *2, 없다면 +1
-      if (sum > 0) {
-        sum *= 2;
-      } else {
-        sum = 1;
-      }
-      stack.push(sum);
     } else {
       console.log("?");
     }
   }
 
-  // 더하는 애들이랑, 마지막 값은 남아있음
-  while (stack.length > 0) {
-    ret += Number(stack.pop());
+  // 각 자릿수에 2이상은 다음 자릿수로 넘겨주기
+  for (let i = 0; i < maxDepth + 1; i++) {
+    if (counter[i] > 1) {
+      counter[i + 1] += Math.floor(counter[i] / 2);
+      counter[i] = counter[i] % 2;
+    }
   }
+}
 
-  return ret;
+function compare(arr1, arr2) {
+  for (let i = 1500000; i > -1; i--) {
+    if (arr1[i] < arr2[i]) return "<";
+    if (arr1[i] > arr2[i]) return ">";
+  }
+  return "=";
 }
